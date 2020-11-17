@@ -26,10 +26,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
-      - name: serverless package
-        uses: serverless/github-action@master
-        with:
-          args: package --stage=prod
+#      - name: serverless package
+#        uses: serverless/github-action@master
+#        with:
+#          args: package --stage=prod
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
