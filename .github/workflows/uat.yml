@@ -5,19 +5,19 @@ on:
 #    branches:
 #      - release/**
   release:
-    types: [published] # created - "Save as draft",
+    types: [released] # created - "Save as draft",
                        # prereleased - a pre-release is created
                        # released - a release or draft of a release is published, or a pre-release is changed to a release
 name: Deploy UAT release
 jobs:
-  deploy:
-    name: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '12'
+#  deploy:
+#    name: deploy
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-node@v1
+#        with:
+#          node-version: '12'
   package:
     name: package and archive
     runs-on: ubuntu-latest
@@ -30,45 +30,24 @@ jobs:
 #        uses: serverless/github-action@master
 #        with:
 #          args: package --stage=prod
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
+#      - name: Dump GitHub context
+#        env:
+#          GITHUB_CONTEXT: ${{ toJson(github) }}
+#        run: echo "$GITHUB_CONTEXT"
 #      - name: Upload Release Asset
 #        uses: actions/upload-release-asset@v1
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #        with:
-#          #upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-#          upload_url:
+#          upload_url: ${{ github.event.upload_url }}
 #          asset_path: .serverless
 #          asset_name: serverlesss.zip
 #          asset_content_type: application/zip
-#      - name: Upload Artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: serverless
-#          path: .serverless
-#          retention-days: 5
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-${{ github.event.release.name }}
+          path: .serverless
+          retention-days: 5
 
 #    - run: npm run migrate
